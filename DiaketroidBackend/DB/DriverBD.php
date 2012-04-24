@@ -9,22 +9,23 @@ class DriverBD{
 	private static $instancia = null;
 	private $conexion = null;
 	
-	private final $direccion="localhost";
-	private final $baseDeDatos="b13_10564860_diaketas";
-	private final $usuario="b13_10564860";
-	private final $password="diaketas";
+	private $direccion="sql109.byethost13.com";
+	private $baseDeDatos="b13_10564860_diaketas";
+	private $usuario="b13_10564860";
+	private $password="diaketas";
 	
 	private function __construct(){}
 	
 	public static function getInstancia(){
-		if(self::$instancia==null){
-			self::$instancia == new DriverBD();
+		if (  !self::$instancia instanceof self)
+		{
+			self::$instancia = new self;
 		}
 		return self::$instancia;
 	}
 	
 	
-	private function conectar(){
+	public function conectar(){
 		try{
 			$this->conexion=new PDO("mysql:host=$this->direccion;dbname=$this->baseDeDatos",$this->usuario,$this->password);
 			$this->conexion->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
@@ -34,8 +35,9 @@ class DriverBD{
 		} 
 	}
 	
-	private function desconectar(){
+	public function desconectar(){
 		$this->conexion=null;
 	}
 }
 ?>
+	

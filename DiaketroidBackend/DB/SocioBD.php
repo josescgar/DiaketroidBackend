@@ -1,14 +1,15 @@
 <?php
 require_once 'DriverBD.php';
-class SocioDB{
-	private static $instancia = null;
+class SocioBD{
+	private static $instancia;
 
 	private function __construct(){
 	}
 
 	public static function getInstancia(){
-		if(self::$instancia==null){
-			self::$instancia == new DriverBD();
+		if (  !self::$instancia instanceof self)
+		{
+			self::$instancia = new self;
 		}
 		return self::$instancia;
 	}
@@ -32,16 +33,46 @@ class SocioDB{
 		}
 	}
 	
+	public function obtenerDatos($socioOID){
+		try{
+			$conex=DriverBD::getInstancia()->conectar();
+			$conex->exec("SET CHARACTER SET utf8");
+			$stmt=$conex->prepare("SELECT * FROM Socio s, C_Persona p, Colaborador c
+									 WHERE s.OID=:oid AND p.OID=s.OID AND c.OID=p.OID");
+			$stmt->bindParam(":oid",$socioOID);
+			$stmt->execute();
+			$datos = $stmt->fetch(PDO::FETCH_OBJ);
+			DriverBD::getInstancia()->desconectar();
+			return $datos;
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+	
+	public function desconectarse($hash){
+		try{
+			$conex=DriverBD::getInstancia()->conectar();
+			$stmt=$conex->prepare("DELETE FROM Hash WHERE hash=:hash");
+			$stmt->bindParam(":hash",$hash);
+			$stmt->execute();
+			DriverBD::getInstancia()->desconectar();
+			return true;
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+	
 	public function existeHash($hash){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
-			$stmt=$conex->prepare("SELECT * FROM Hash WHERE hash=:hash");
+			$stmt=$conex->prepare("SELECT socioOID FROM Hash WHERE hash=:hash");
 			$stmt->bindParam(":hash",$hash);
 			$stmt->execute();
 			$rows=$stmt->rowCount();
+			$socio = $stmt->fetch(PDO::FETCH_OBJ);
 			DriverBD::getInstancia()->desconectar();
 			if($rows==1)
-				return $true;
+				return $socio->socioOID;
 			else
 				return false;
 		}catch(PDOException $e){
