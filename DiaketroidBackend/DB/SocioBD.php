@@ -33,6 +33,41 @@ class SocioBD{
 		}
 	}
 	
+	public function modificarDatos($socioOID,$socio){
+		try{
+			$conex=DriverBD::getInstancia()->conectar();
+			
+			$stmt=$conex->prepare("UPDATE Socio SET Usuario=:usuario, Contraseña=:password WHERE OID=:oid");
+			$stmt->bindParam(":usuario",utf8_decode($socio->usuario));
+			$stmt->bindParam(":password",$socio->password);
+			$stmt->bindParam(":oid",$socioOID);
+			$stmt->execute();
+			
+			$stmt=$conex->prepare("UPDATE C_Persona SET Nombre=:nombre, Apellidos=:apellidos, FechaNacimiento=:fechaNacimiento, Sexo=:sexo WHERE OID=:oid");
+			$stmt->bindParam(":nombre",utf8_decode($socio->nombre));
+			$stmt->bindParam(":apellidos",utf8_decode($socio->apellidos));
+			$stmt->bindParam(":fechaNacimiento",$socio->fechaNacimiento);
+			$stmt->bindParam(":sexo",$socio->sexo);
+			$stmt->bindParam(":oid",$socioOID);
+			$stmt->execute();
+			
+			$stmt=$conex->prepare("UPDATE Colaborador SET Direccion=:direccion, Localidad=:localidad, Provincia=:provincia, CP=:codigoPostal, Email=:email WHERE OID=:oid");
+			$stmt->bindParam(":direccion",utf8_decode($socio->direccion));
+			$stmt->bindParam(":localidad",utf8_decode($socio->localidad));
+			$stmt->bindParam(":provincia",utf8_decode($socio->provincia));
+			$stmt->bindParam(":codigoPostal",$socio->codigoPostal);
+			$stmt->bindParam(":email",$socio->email);
+			$stmt->bindParam(":oid",$socioOID);
+			$stmt->execute();
+			
+			DriverBD::getInstancia()->desconectar();
+			return true;
+		}catch(PDOException $e){
+			echo $e->getMessage().$e->getLine();
+			return false;
+		}
+	}
+	
 	public function obtenerDatos($socioOID){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();

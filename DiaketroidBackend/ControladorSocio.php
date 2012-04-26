@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
+header('Content-Type: application/json');
 require_once 'DB/SocioBD.php';
 $socioBD = SocioBD::getInstancia();
 if(isset($_COOKIE['hash']) && $socioOID=$socioBD->existeHash($_COOKIE['hash'])){
@@ -12,6 +12,17 @@ if(isset($_COOKIE['hash']) && $socioOID=$socioBD->existeHash($_COOKIE['hash'])){
 			exit('{"estado":"error","msg":"Ha ocurrido un error al obtener los datos del socio"}');
 		}
 		
+	} else if($tarea=="modificar"){
+		
+		$datos=stripslashes($_POST['datos']);
+		$socio = json_decode(utf8_encode($datos));
+		if($socio!=NULL)
+			if($socioBD->modificarDatos($socioOID,$socio))
+				exit('{"estado":"OK"}');
+			else
+				exit('{"estado":"error","msg":"Problema al actualizar los datos en la BD"}');
+		else
+			exit('{"estado":"error","msg":"Error de decodificación de datos"}');
 	}
 	
 } else {
