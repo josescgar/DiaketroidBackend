@@ -18,7 +18,7 @@ class CuotaBD{
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
 			$conex->exec("SET CHARACTER SET utf8");
-			$stmt=$conex->prepare("SELECT Cantidad, IntervalosPagos FROM Cuota WHERE OIDSocio=:oid AND FechaFin IS NULL");
+			$stmt=$conex->prepare("SELECT * FROM Cuota WHERE OIDSocio=:oid AND FechaFin IS NULL");
 			$stmt->bindParam(":oid",$socioOID);
 			$stmt->execute();
 			$datos = $stmt->fetch(PDO::FETCH_OBJ);
@@ -27,6 +27,41 @@ class CuotaBD{
 		}catch(PDOException $e){
 			return false;
 		}
+	}
+	
+	public function cancelarCuota(){
+		try{
+			$conex=DriverBD::getInstancia()->conectar();
+			$stmt=$conex->prepare("UPDATE Cuota SET FechaFin=:fecha WHERE FechaFin IS NULL");
+			$fecha = date("Y-m-d",time());
+			$stmt->bindParam(":fecha",$fecha);
+			$stmt->execute();
+			DriverBD::getInstancia()->desconectar();
+			return true;
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+	
+	public function modificarCuota($socioOID,$OID,$cantidad,$intervaloPagos,$fechaFin){
+		try{
+			$conex=DriverBD::getInstancia()->conectar();
+			$stmt=$conex->prepare("UPDATE Cuota SET FechaFin=:fecha WHERE OID=:oid");
+			$stmt->bindParam(":oid",$OID);
+			$stmt->bindParam(":fecha",$fechaFin);
+			$stmt->execute();
+			$stmt=$conex->prepare("INSERT INTO Cuota (OIDSocio,Cantidad,IntervalosPagos,FechaInicio) VALUES (:oid,:cantidad,:intervalo,:fecha)");
+			$stmt->bindParam(":oid",$socioOID);
+			$stmt->bindParam(":cantidad",$cantidad);
+			$stmt->bindParam(":intervalo",$intervaloPagos);
+			$stmt->bindParam(":fecha",$fechaFin);
+			$stmt->execute();
+			DriverBD::getInstancia()->desconectar();
+			return true;
+		}catch(PDOException $e){
+			return false;
+		}
+		
 	}
 }
 ?>
