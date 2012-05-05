@@ -1,4 +1,11 @@
 <?php
+/**
+ *
+ * Controlador para la gestión de todas las tareas referentes
+ * a la gestión de la identificación de los usuarios en el servidor
+ * @author Jose A. Escobar
+ *
+ */
 header('Content-Type: application/json');
 require_once 'DB/SocioBD.php';
 $socioBD = SocioBD::getInstancia();

@@ -9,6 +9,7 @@ class DriverBD{
 	private static $instancia = null;
 	private $conexion = null;
 	
+	/* Datos de conexión a la BD */
 	private $direccion="sql109.byethost13.com";
 	private $baseDeDatos="b13_10564860_diaketas";
 	private $usuario="b13_10564860";
@@ -16,6 +17,9 @@ class DriverBD{
 	
 	private function __construct(){}
 	
+	/*
+	 * Patrón Singleton
+	 */
 	public static function getInstancia(){
 		if (  !self::$instancia instanceof self)
 		{
@@ -24,7 +28,10 @@ class DriverBD{
 		return self::$instancia;
 	}
 	
-	
+	/*
+	 * Establece una nueva conexión con la BD, devolviendo un objeto
+	 * PDO con la misma
+	 */
 	public function conectar(){
 		try{
 			$this->conexion=new PDO("mysql:host=$this->direccion;dbname=$this->baseDeDatos",$this->usuario,$this->password);
@@ -35,6 +42,9 @@ class DriverBD{
 		} 
 	}
 	
+	/*
+	 * Destruye la conexión a la BD
+	 */
 	public function desconectar(){
 		$this->conexion=null;
 	}

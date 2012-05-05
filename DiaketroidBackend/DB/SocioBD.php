@@ -1,11 +1,22 @@
 <?php
+/**
+ *
+ * Gestión de las consultas y modificaciones en la base de datos con
+ * todo lo referente a los datos del socio asi como de la gestión
+ * de la identificación del usuario
+ * @author Jose A. Escobar
+ *
+ */
 require_once 'DriverBD.php';
 class SocioBD{
 	private static $instancia;
 
 	private function __construct(){
 	}
-
+	
+	/*
+	 * Patrón Singleton
+	 */
 	public static function getInstancia(){
 		if (  !self::$instancia instanceof self)
 		{
@@ -14,6 +25,10 @@ class SocioBD{
 		return self::$instancia;
 	}
 	
+	/*
+	 * Realiza la identificación de un usuario, devolviendo
+	 * los datos del mismo en caso de éxito
+	 */
 	public function identificarse($usuario,$password){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
@@ -33,6 +48,10 @@ class SocioBD{
 		}
 	}
 	
+	/*
+	 * Modifica los datos de un socio según los especificados
+	 * en los parámetros
+	 */
 	public function modificarDatos($socioOID,$socio){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
@@ -71,6 +90,9 @@ class SocioBD{
 		}
 	}
 	
+	/*
+	 * Obtiene los datos de un socio específico
+	 */
 	public function obtenerDatos($socioOID){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
@@ -87,6 +109,9 @@ class SocioBD{
 		}
 	}
 	
+	/*
+	 * Realiza la función de desidentificarse del sistema
+	 */
 	public function desconectarse($hash){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
@@ -100,6 +125,10 @@ class SocioBD{
 		}
 	}
 	
+	/*
+	 * Comprueba si el Socio ya está logeado en el servidor con
+	 * un código hash que lo relaciona
+	 */
 	public function existeHash($hash){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
@@ -118,6 +147,9 @@ class SocioBD{
 		}
 	}
 	
+	/*
+	 * Relaciona un nuevo código de hash con el socio
+	 */
 	public function insertarHash($socioOID,$hash){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();

@@ -1,4 +1,11 @@
 <?php
+/**
+ *
+ * Controlador para la gestión de todas las tareas referentes
+ * a la gestión del historial de pagos y colaboracioens de los socios
+ * @author Jose A. Escobar
+ *
+ */
 header('Content-Type: application/json');
 require_once 'DB/SocioBD.php';
 require_once 'DB/HistorialBD.php';
@@ -8,9 +15,9 @@ if(isset($_COOKIE['hash']) && $socioOID=$socioBD->existeHash($_COOKIE['hash'])){
 	
 	if($tarea=="consultar"){
 		$historialBD=HistorialBD::getInstancia();
-		$fechaInicio=htmlspecialchars(trim($_POST['fechaIni']));
+		$fechaIni=htmlspecialchars(trim($_POST['fechaIni']));
 		$fechaFin=htmlspecialchars(trim($_POST['fechaFin']));
-		if($datos=$historialBD->obtenerDatos($socioOID,$fechaInicio,$fechaFin)){
+		if($datos=$historialBD->obtenerDatos($socioOID,$fechaIni,$fechaFin)){
 			$res->estado="OK";
 			$res->datos=$datos;
 			exit(json_encode($res));

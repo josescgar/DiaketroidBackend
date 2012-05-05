@@ -1,4 +1,11 @@
 <?php
+/**
+ *
+ * Gestión de las consultas y modificaciones en la base de datos con
+ * todo lo referente al historial de pagos y colaboracioens del socio
+ * @author Jose A. Escobar
+ *
+ */
 require_once 'DriverBD.php';
 class HistorialBD{
 	private static $instancia;
@@ -6,6 +13,9 @@ class HistorialBD{
 	private function __construct(){
 	}
 	
+	/*
+	 * Patrón Singleton
+	 */
 	public static function getInstancia(){
 		if (  !self::$instancia instanceof self)
 		{
@@ -14,6 +24,10 @@ class HistorialBD{
 		return self::$instancia;
 	}
 	
+	/*
+	 * Obtiene todos los pagos y colaboraciones del socio para un periodo
+	 * de tiempo específico.
+	 */
 	public function obtenerDatos($socioOID,$fechaInicio,$fechaFin){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();

@@ -1,11 +1,19 @@
 <?php
+/**
+ *
+ * Gestión de las consultas y modificaciones en la base de datos con 
+ * todo lo referente a las Cuotas.
+ * @author Jose A. Escobar
+ *
+ */
 require_once 'DriverBD.php';
 class CuotaBD{
 	private static $instancia;
 
 	private function __construct(){
 	}
-
+	
+	/* Patrón singleton */
 	public static function getInstancia(){
 		if (  !self::$instancia instanceof self)
 		{
@@ -14,6 +22,9 @@ class CuotaBD{
 		return self::$instancia;
 	}
 	
+	/*
+	 * Obtiene los datos de la última cuota en curso del Socio
+	 */
 	public function obtenerDatos($socioOID){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
@@ -29,6 +40,9 @@ class CuotaBD{
 		}
 	}
 	
+	/*
+	 * Cancela la cuota actual del Socio
+	 */
 	public function cancelarCuota($socioOID){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
@@ -44,10 +58,14 @@ class CuotaBD{
 		}
 	}
 	
+	/*
+	 * Modifica los datos de la cuota actual, cancelando esta a fecha actual
+	 * y creando una nueva con dichos datos y la fecha actual como inicio
+	 */
 	public function modificarCuota($socioOID,$OID,$cantidad,$intervaloPagos,$fechaFin){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
-			$stmt=$conex->prepare("UPDATE Cuota SET FechaFin=:fecha WHERE OID=:oid");
+			$stmt=$conex->prepare("UPDATE Cuota SET FechaFin=:fecha WHERE OID=:oid AND FechaFin IS NULL");
 			$stmt->bindParam(":oid",$OID);
 			$stmt->bindParam(":fecha",$fechaFin);
 			$stmt->execute();
