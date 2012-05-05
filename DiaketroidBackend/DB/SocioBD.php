@@ -43,18 +43,21 @@ class SocioBD{
 			$stmt->bindParam(":oid",$socioOID);
 			$stmt->execute();
 			
-			$stmt=$conex->prepare("UPDATE C_Persona SET Nombre=:nombre, Apellidos=:apellidos, FechaNacimiento=:fechaNacimiento, Sexo=:sexo WHERE OID=:oid");
+			$stmt=$conex->prepare("UPDATE C_Persona SET Nombre=:nombre, Apellidos=:apellidos, FechaNacimiento=:fechaNacimiento, Nacionalidad=:nacionalidad, Sexo=:sexo WHERE OID=:oid");
 			$stmt->bindParam(":nombre",utf8_decode($socio->nombre));
 			$stmt->bindParam(":apellidos",utf8_decode($socio->apellidos));
+			$stmt->bindParam(":nacionalidad",utf8_decode($socio->nacionalidad));
 			$stmt->bindParam(":fechaNacimiento",$socio->fechaNacimiento);
 			$stmt->bindParam(":sexo",$socio->sexo);
 			$stmt->bindParam(":oid",$socioOID);
 			$stmt->execute();
 			
-			$stmt=$conex->prepare("UPDATE Colaborador SET Direccion=:direccion, Localidad=:localidad, Provincia=:provincia, CP=:codigoPostal, Email=:email WHERE OID=:oid");
+			$stmt=$conex->prepare("UPDATE Colaborador SET Direccion=:direccion, Localidad=:localidad, Provincia=:provincia, CP=:codigoPostal, Email=:email, TelefonoFijo=:fijo, TelefonoMovil=:movil WHERE OID=:oid");
 			$stmt->bindParam(":direccion",utf8_decode($socio->direccion));
 			$stmt->bindParam(":localidad",utf8_decode($socio->localidad));
 			$stmt->bindParam(":provincia",utf8_decode($socio->provincia));
+			$stmt->bindParam(":fijo",utf8_decode($socio->telefonoFijo));
+			$stmt->bindParam(":movil",utf8_decode($socio->telefonoMovil));
 			$stmt->bindParam(":codigoPostal",$socio->codigoPostal);
 			$stmt->bindParam(":email",$socio->email);
 			$stmt->bindParam(":oid",$socioOID);
