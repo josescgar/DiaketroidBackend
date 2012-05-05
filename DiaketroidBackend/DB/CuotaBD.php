@@ -29,12 +29,13 @@ class CuotaBD{
 		}
 	}
 	
-	public function cancelarCuota(){
+	public function cancelarCuota($socioOID){
 		try{
 			$conex=DriverBD::getInstancia()->conectar();
-			$stmt=$conex->prepare("UPDATE Cuota SET FechaFin=:fecha WHERE FechaFin IS NULL");
+			$stmt=$conex->prepare("UPDATE Cuota SET FechaFin=:fecha WHERE OIDSocio=:oid AND FechaFin IS NULL");
 			$fecha = date("Y-m-d",time());
 			$stmt->bindParam(":fecha",$fecha);
+			$stmt->bindParam(":oid",$socioOID);
 			$stmt->execute();
 			DriverBD::getInstancia()->desconectar();
 			return true;

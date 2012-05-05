@@ -10,8 +10,6 @@ if(isset($_COOKIE['hash']) && $socioOID=$socioBD->existeHash($_COOKIE['hash'])){
 		if($datos=$cuotaBD->obtenerDatos($socioOID)){
 			$datos->estado="OK";
 			exit(json_encode($datos));
-		} else if($datos=false){
-			exit('{"estado":"error","msg":"Ha ocurrido un error al obtener los datos de la cuota"}');
 		} else {
 			exit('{"estado":"error","msg":"No hay ninguna cuota en curso"}');
 		}
@@ -27,7 +25,7 @@ if(isset($_COOKIE['hash']) && $socioOID=$socioBD->existeHash($_COOKIE['hash'])){
 		else
 			exit('{"estado":"error","msg":"Error de decodificación de datos"}');
 	} else if ($tarea=="cancelar"){
-		if($cuotaBD->cancelarCuota())
+		if($cuotaBD->cancelarCuota($socioOID))
 			exit('{"estado":"OK"}');
 		else
 			exit('{"estado":"error","msg":"Error al cancelar la cuota en la BD"}');
